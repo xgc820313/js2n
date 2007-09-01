@@ -1,0 +1,52 @@
+// Js2n.idl : type library source for ActiveX Control project.
+
+// This file will be processed by the MIDL compiler tool to
+// produce the type library (Js2n.tlb) that will become a resource in
+// Js2n.ocx.
+
+#include <olectl.h>
+#include <idispids.h>
+
+[ uuid(D1D52419-786B-4DF4-BFBA-DB53439542E1), version(1.0),
+  helpfile("Js2n.hlp"),
+  helpstring("Js2n ActiveX Control module"),
+  control ]
+library Js2nLib
+{
+	importlib(STDOLE_TLB);
+
+	//  Primary dispatch interface for CJs2nCtrl
+
+	[ uuid(C92682EB-F002-4FA9-9430-E5B181B90620),
+	  helpstring("Dispatch interface for Js2n Control")]
+	dispinterface _DJs2n
+	{
+		properties:
+		methods:
+
+			[id(DISPID_ABOUTBOX)] void AboutBox();
+	};
+
+	//  Event dispatch interface for CJs2nCtrl
+
+	[ uuid(7EE9678C-E65B-424C-8831-835580DF30FF),
+	  helpstring("Event interface for Js2n Control") ]
+	dispinterface _DJs2nEvents
+	{
+		properties:
+			//  Event interface has no properties
+		methods:
+			[id(1)] void Js2nEvent(BSTR strEventType);
+	};
+
+	//  Class information for CJs2nCtrl
+
+	[ uuid(A5243CDA-45BB-408E-8BB6-F999692C77A3),
+	  helpstring("Js2n Control"), control ]
+	coclass Js2n
+	{
+		[default] dispinterface _DJs2n;
+		[default, source] dispinterface _DJs2nEvents;
+	};
+
+};
