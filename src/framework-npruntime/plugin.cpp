@@ -435,7 +435,24 @@ NPBool CPlugin::init(NPWindow* pNPWindow)
   m_bInitialized	= TRUE;
   g_pNPInstance		= m_pNPInstance;
   g_pNPWindow		= pNPWindow;
-  g_NativeLogic.Init( g_strPageURL );
+  PString strPluginPath;
+#ifdef XP_WIN // NPAPI plugin
+	//Get Current Path of exe
+	char szFullFileName[ MAX_PATH ];
+	GetModuleFileName ( GetModuleHandle(NULL), szFullFileName, MAX_PATH ) ;
+	strPluginPath = szFullFileName;
+	PINDEX nPos = strPluginPath.FindLast( "\\" );
+	strPluginPath = strPluginPath.Mid( 0, nPos + 1 ) + "plugins\\js2n\\";
+#else // not Windows - assuming Linux
+    BrInitError error;
+    if (br_init_lib(&error) == 0 && error != BR_INIT_ERROR_DISABLED)
+    {
+        printf( "Error - can't init binreloc, code %d\n", error );
+    }
+	strPluginPath = br_find_exe_dir("/usr/lib/firefox/plugins/");
+	strPluginPath += "js2n/";
+#endif
+  g_NativeLogic.Init( g_strPageURL, strPluginPath );
   return TRUE;
 }
 

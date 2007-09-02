@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0366 */
-/* at Sun Sep 02 00:04:12 2007
+/* at Sun Sep 02 20:36:57 2007
  */
 /* Compiler settings for .\Js2n.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -93,7 +93,7 @@ EXTERN_C const IID DIID__DJs2n;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
 
-    MIDL_INTERFACE("C92682EB-F002-4FA9-9430-E5B181B90620")
+    MIDL_INTERFACE("DB94C377-4B82-4cac-B5C6-B927ABCE6E52")
     _DJs2n : public IDispatch
     {
     };
@@ -199,7 +199,7 @@ EXTERN_C const IID DIID__DJs2nEvents;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
 
-    MIDL_INTERFACE("7EE9678C-E65B-424C-8831-835580DF30FF")
+    MIDL_INTERFACE("6FCA21FB-78E6-4825-8319-5C8285AE08CA")
     _DJs2nEvents : public IDispatch
     {
     };
@@ -298,7 +298,7 @@ EXTERN_C const CLSID CLSID_Js2n;
 
 #ifdef __cplusplus
 
-class DECLSPEC_UUID("A5243CDA-45BB-408E-8BB6-F999692C77A3")
+class DECLSPEC_UUID("C802F39D-BF85-427a-A334-77E501DB62E9")
 Js2n;
 #endif
 #endif /* __Js2nLib_LIBRARY_DEFINED__ */

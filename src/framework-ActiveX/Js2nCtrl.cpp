@@ -5,6 +5,7 @@
 #include "Js2nCtrl.h"
 #include "Js2nPropPage.h"
 #include "helpers.h"
+#include "registry.h"
 
 #include <comcat.h>
 #include <objsafe.h>
@@ -51,12 +52,10 @@ END_PROPPAGEIDS(CJs2nCtrl)
 
 
 // Initialize class factory and guid
-// a5243cda-45bb-408e-8bb6-f999692c77a3
+// {C802F39D-BF85-427a-A334-77E501DB62E9}
 
 IMPLEMENT_OLECREATE_EX(CJs2nCtrl, "Js2n.Js2nCtrl.1",
-	0xa5243cda, 0x45bb, 0x408e, 0x8b, 0xb6, 0xf9, 0x99, 0x69, 0x2c, 0x77, 0xa3)
-
-
+	0xc802f39d, 0xbf85, 0x427a, 0xa3, 0x34, 0x77, 0xe5, 0x1, 0xdb, 0x62, 0xe9);
 
 // Type library ID and version
 
@@ -66,10 +65,13 @@ IMPLEMENT_OLETYPELIB(CJs2nCtrl, _tlid, _wVerMajor, _wVerMinor)
 
 // Interface IDs
 
+// {DB94C377-4B82-4cac-B5C6-B927ABCE6E52}
 const IID BASED_CODE IID_DJs2n =
-		{ 0xC92682EB, 0xF002, 0x4FA9, { 0x94, 0x30, 0xE5, 0xB1, 0x81, 0xB9, 0x6, 0x20 } };
+		{ 0xdb94c377, 0x4b82, 0x4cac, { 0xb5, 0xc6, 0xb9, 0x27, 0xab, 0xce, 0x6e, 0x52 } };
+
+// {6FCA21FB-78E6-4825-8319-5C8285AE08CA}
 const IID BASED_CODE IID_DJs2nEvents =
-		{ 0x7EE9678C, 0xE65B, 0x424C, { 0x88, 0x31, 0x83, 0x55, 0x80, 0xDF, 0x30, 0xFF } };
+		{ 0x6fca21fb, 0x78e6, 0x4825, { 0x83, 0x19, 0x5c, 0x82, 0x85, 0xae, 0x8, 0xca } };
 
 
 
@@ -83,6 +85,18 @@ static const DWORD BASED_CODE _dwJs2nOleMisc =
 	OLEMISC_RECOMPOSEONRESIZE;
 
 IMPLEMENT_OLECTLTYPE(CJs2nCtrl, IDS_Js2n, _dwJs2nOleMisc)
+
+PString FindPluginsPath( void )
+{
+	CRegString regStr( "CLSID\\{C802F39D-BF85-427A-A334-77E501DB62E9}\\InprocServer32\\", "", FALSE, HKEY_CLASSES_ROOT );
+
+	string strRead			= regStr.read();
+	PString strPluginPath	= strRead;
+	PINDEX nPos				= strPluginPath.FindLast( "\\" );
+	strPluginPath = strPluginPath.Mid( 0, nPos + 1 ) + "js2n\\";
+
+	return strPluginPath;
+}
 
 // CJs2nCtrl::CJs2nCtrlFactory::UpdateRegistry -
 // Adds or removes system registry entries for CJs2nCtrl
@@ -224,7 +238,8 @@ void CJs2nCtrl::OnSetClientSite()
 			if (SUCCEEDED(ppmk->GetDisplayName(NULL, NULL, &pszDisplayName)))
 			{
 				PString strURL( (WORD *)pszDisplayName );
-				m_NativeLogic.Init( strURL );
+				PString strPluginsPath = FindPluginsPath();
+				m_NativeLogic.Init( strURL, strPluginsPath );
 				CoTaskMemFree((LPVOID)pszDisplayName);
 			}
 		}
@@ -236,9 +251,9 @@ void CJs2nCtrl::OnSetClientSite()
 // CJs2nCtrl message handlers
 BSTR CJs2nCtrl::Send(LPCTSTR szCommand) 
 {
-	string strCmd = szCommand;
-	string strResult = m_NativeLogic.InvokeFunction( strCmd );
-	CString strRet = strResult.c_str();
+	string strCmd		= szCommand;
+	string strResult	= m_NativeLogic.InvokeFunction( strCmd );
+	CString strRet		= strResult.c_str();
 	return strRet.AllocSysString();
 }
 

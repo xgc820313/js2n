@@ -27,10 +27,11 @@ OBJECTDIR=build/Release/GNU-Linux-x86
 OBJECTFILES= \
 	${OBJECTDIR}/plugin.o \
 	${OBJECTDIR}/nprn.o \
-	${OBJECTDIR}/binreloc.o \
+	${OBJECTDIR}/_ext/root/js2n/src/framework-npruntime/../common/binreloc.o \
 	${OBJECTDIR}/npp_gate.o \
 	${OBJECTDIR}/npn_gate.o \
-	${OBJECTDIR}/np_entry.o
+	${OBJECTDIR}/np_entry.o \
+	${OBJECTDIR}/_ext/root/js2n/src/framework-npruntime/../common/nativelogic.o
 
 # C Compiler Flags
 CFLAGS=
@@ -62,9 +63,9 @@ ${OBJECTDIR}/nprn.o: nprn.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	$(COMPILE.cc) -O2 -DENABLE_BINRELOC -DXPCOM_GLUE -DMOZILLA_STRICT_API -DXP_UNIX -DMOZ_X11 -Igecko-sdk/include -I/root/pwlib/include -o ${OBJECTDIR}/nprn.o nprn.cpp
 
-${OBJECTDIR}/binreloc.o: binreloc.c 
-	${MKDIR} -p ${OBJECTDIR}
-	$(COMPILE.c) -O2 -DENABLE_BINRELOC -o ${OBJECTDIR}/binreloc.o binreloc.c
+${OBJECTDIR}/_ext/root/js2n/src/framework-npruntime/../common/binreloc.o: ../common/binreloc.c 
+	${MKDIR} -p ${OBJECTDIR}/_ext/root/js2n/src/framework-npruntime/../common
+	$(COMPILE.c) -O2 -DENABLE_BINRELOC -o ${OBJECTDIR}/_ext/root/js2n/src/framework-npruntime/../common/binreloc.o ../common/binreloc.c
 
 ${OBJECTDIR}/npp_gate.o: npp_gate.cpp 
 	${MKDIR} -p ${OBJECTDIR}
@@ -77,6 +78,10 @@ ${OBJECTDIR}/npn_gate.o: npn_gate.cpp
 ${OBJECTDIR}/np_entry.o: np_entry.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	$(COMPILE.cc) -O2 -DENABLE_BINRELOC -DXPCOM_GLUE -DMOZILLA_STRICT_API -DXP_UNIX -DMOZ_X11 -Igecko-sdk/include -I/root/pwlib/include -o ${OBJECTDIR}/np_entry.o np_entry.cpp
+
+${OBJECTDIR}/_ext/root/js2n/src/framework-npruntime/../common/nativelogic.o: ../common/nativelogic.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/root/js2n/src/framework-npruntime/../common
+	$(COMPILE.cc) -O2 -DENABLE_BINRELOC -DXPCOM_GLUE -DMOZILLA_STRICT_API -DXP_UNIX -DMOZ_X11 -Igecko-sdk/include -I/root/pwlib/include -o ${OBJECTDIR}/_ext/root/js2n/src/framework-npruntime/../common/nativelogic.o ../common/nativelogic.cpp
 
 # Subprojects
 .build-subprojects:
