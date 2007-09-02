@@ -4,7 +4,8 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>binreloc.c</itemPath>
+      <itemPath>../common/binreloc.c</itemPath>
+      <itemPath>../common/nativelogic.cpp</itemPath>
       <itemPath>np_entry.cpp</itemPath>
       <itemPath>npn_gate.cpp</itemPath>
       <itemPath>npp_gate.cpp</itemPath>
@@ -59,8 +60,11 @@
           <commandLine>-fno-rtti -fno-exceptions</commandLine>
         </linkerTool>
       </compileType>
-      <item path="binreloc.c">
+      <item path="../common/binreloc.c">
         <itemTool>0</itemTool>
+      </item>
+      <item path="../common/nativelogic.cpp">
+        <itemTool>1</itemTool>
       </item>
       <item path="np_entry.cpp">
         <itemTool>1</itemTool>
@@ -115,8 +119,11 @@
           <commandLine>-fno-rtti -fno-exceptions</commandLine>
         </linkerTool>
       </compileType>
-      <item path="binreloc.c">
+      <item path="../common/binreloc.c">
         <itemTool>0</itemTool>
+      </item>
+      <item path="../common/nativelogic.cpp">
+        <itemTool>1</itemTool>
       </item>
       <item path="np_entry.cpp">
         <itemTool>1</itemTool>

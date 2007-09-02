@@ -145,7 +145,7 @@ CRegString::~CRegString(void)
 
 CString	CRegString::read()
 {
-	ASSERT(m_key != _T(""));
+	//ASSERT(m_key != _T(""));
 	if (RegOpenKeyEx(m_base, m_path, 0, KEY_EXECUTE, &m_hKey)==ERROR_SUCCESS)
 	{
 		int size = 0;

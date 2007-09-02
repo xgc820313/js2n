@@ -36,10 +36,69 @@
 
 #include <ptlib.h>
 
+class PURLPermissions
+{
+	struct tUrl2Auth : public PObject
+	{
+		tUrl2Auth( const PString& strURL, const PString& strAuth )
+		{
+			m_strURL			= strURL;
+			m_strPermissions	= strAuth;
+		}
+		PString m_strURL;
+		PString m_strPermissions;
+	};
+
+public:
+
+	void Add( const PString& strURL, const PString& strPermissions )
+	{
+		tUrl2Auth* pAuth = new tUrl2Auth( strURL, strPermissions );
+		m_arPermissions.Append( pAuth );
+	}
+
+	bool Find( const PString& strURL, const PString& strLibrary )
+	{
+		PString strSaveAuth	= "";
+		int nMaxLenURLc		= 0;
+		int nLenURL			= strURL.GetSize();
+		int nSize			= m_arPermissions.GetSize();
+
+		for (int i=0; i<nSize; i++)
+		{
+			tUrl2Auth auth  = m_arPermissions[ i ];
+			PString strURLc	= auth.m_strURL;
+			PString strAuth = auth.m_strPermissions;
+			int nLenURLc = strURLc.GetSize();
+			if ( nLenURLc > nLenURL )
+			{
+				continue;
+			}
+			if ( nLenURLc > nMaxLenURLc )
+			{
+				nMaxLenURLc = nLenURLc;
+				strSaveAuth = strAuth;
+			}
+		}
+
+		PString strLocate = ":" + strLibrary + ":";
+		if ( strSaveAuth.Find( strLocate ) == P_MAX_INDEX &&
+			 strSaveAuth.Find( ":*:" ) == P_MAX_INDEX )
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+private:
+	PArray<tUrl2Auth> m_arPermissions;
+};
+
 class tNativeLogic
 {
 public:
-	bool Init( const PString& strURL );
+	bool Init( const PString& strURL, const PString& strPluginsPath );
 	PString InvokeFunction( const PString& strFunction );
 
 private:
@@ -47,10 +106,10 @@ private:
 	PString GetSysErrMsg( void );
 
 private:
-	PString							m_strPath;
-	PString							m_strURL;
-	PAtomicInteger					m_nObjId;
-	PDictionary<PString,PString>	m_URL2Permission;
+	PString				m_strPath;
+	PString				m_strURL;
+	PAtomicInteger		m_nObjId;
+	PURLPermissions		m_Permissions;
 };
 
 #endif

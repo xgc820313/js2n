@@ -41,7 +41,6 @@
 #include "nativelogic.h"
 #include <ptlib.h>
 #include <ptlib/pprocess.h>
-#include <ptclib/url.h>
 
 class PInvokeMethod;
 
@@ -87,30 +86,11 @@ PWLibProcess g_pwlibProcess;
 //______________________________________________________________________________
 ////////////////////////////////////////////////////////////////////////////////
 
-bool tNativeLogic::Init( const PString& strURL )
+bool tNativeLogic::Init( const PString& strURL, const PString& strPluginsPath )
 {
 	m_strURL = strURL;
 	m_nObjId.SetValue( 0 );
-#ifdef _WINDOWS
-#ifdef XP_WIN // NPAPI plugin
-	//Get Current Path of exe
-	char szFullFileName[ MAX_PATH ];
-	GetModuleFileName ( GetModuleHandle(NULL), szFullFileName, MAX_PATH ) ;
-	strPath = szFullFileName;
-	PINDEX nPos = strPath.FindLast( "\\" );
-	m_strPath = strPath.Mid( 0, nPos + 1 ) + "plugins\\js2n\\";
-#else // ActiveX for IE
-	m_strPath = "c:\\dev\\js2n\\src\\framework-ActiveX\\Debug\\js2n\\";
-#endif
-#else // not Windows - assuming Linux
-	m_strPath = br_find_exe_dir("/usr/lib/firefox/plugins/");
-	m_strPath += "js2n/";
-    BrInitError error;
-    if (br_init_lib(&error) == 0 && error != BR_INIT_ERROR_DISABLED)
-    {
-        printf( "Error - can't init binreloc, code %d\n", error );
-    }
-#endif
+	m_strPath = strPluginsPath;
 	PTextFile filePermissions;
 	PString strFileName = m_strPath + "auth.txt";
 	if ( filePermissions.Open( strFileName ) )
@@ -123,11 +103,9 @@ bool tNativeLogic::Init( const PString& strURL )
 			{
 				continue;
 			}
-			PURL     url			= arParams[ 0 ];
-			PString  strHostname	= url.GetHostName();
-			PString* pPermissions	= new PString( arParams[ 1 ] );
-			strHostname = strHostname.ToLower();
-			m_URL2Permission.SetAt( strHostname, pPermissions );
+			PString strURL			= arParams[ 0 ];
+			PString strPermissions	= arParams[ 1 ];
+			m_Permissions.Add( strURL, strPermissions );
 		}
 		filePermissions.Close();
 	}
@@ -207,21 +185,12 @@ PString tNativeLogic::InvokeFunction( const PString& strFunction )
 			return strResult;
 		}
 
-		if ( m_strURL.Left( 4 ) != "file://" ) // for now assume local files are safe
+		if ( m_strURL.Left( 7 ) != "file://" ) // for now assume local files are safe
 		{
-			PString strErr	= "Error No permission to load: " + strLibrary + " for " + m_strURL;
-			PURL    url		= m_strURL;
-			PString strHost	= url.GetHostName().ToLower();
-			PString* pstrPermissions = m_URL2Permission.GetAt( strHost );
-			if ( pstrPermissions == NULL )
+			// Check if requests from this URL are allowed to access this library
+			if ( m_Permissions.Find( m_strURL, strLibrary ) )
 			{
-				return strErr + " (no entry)";
-			}
-			PString strLocate = ":" + strLibrary + ":";
-			if ( pstrPermissions->Find( strLocate ) == P_MAX_INDEX &&
-				 pstrPermissions->Find( ":*:" ) == P_MAX_INDEX )
-			{
-				return strErr;
+				return "Error No permission to load: " + strLibrary + " for " + m_strURL;;
 			}
 		}
 

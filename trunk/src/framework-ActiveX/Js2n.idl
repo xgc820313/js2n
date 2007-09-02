@@ -7,7 +7,7 @@
 #include <olectl.h>
 #include <idispids.h>
 
-[ uuid(D1D52419-786B-4DF4-BFBA-DB53439542E1), version(1.0),
+[ uuid(7E829C5E-6093-4e3d-9622-7BC829D3EB65), version(1.0),
   helpfile("Js2n.hlp"),
   helpstring("Js2n ActiveX Control module"),
   control ]
@@ -17,7 +17,7 @@ library Js2nLib
 
 	//  Primary dispatch interface for CJs2nCtrl
 
-	[ uuid(C92682EB-F002-4FA9-9430-E5B181B90620),
+	[ uuid(DB94C377-4B82-4cac-B5C6-B927ABCE6E52),
 	  helpstring("Dispatch interface for Js2n Control")]
 	dispinterface _DJs2n
 	{
@@ -29,7 +29,7 @@ library Js2nLib
 
 	//  Event dispatch interface for CJs2nCtrl
 
-	[ uuid(7EE9678C-E65B-424C-8831-835580DF30FF),
+	[ uuid(6FCA21FB-78E6-4825-8319-5C8285AE08CA),
 	  helpstring("Event interface for Js2n Control") ]
 	dispinterface _DJs2nEvents
 	{
@@ -41,7 +41,7 @@ library Js2nLib
 
 	//  Class information for CJs2nCtrl
 
-	[ uuid(A5243CDA-45BB-408E-8BB6-F999692C77A3),
+	[ uuid(C802F39D-BF85-427a-A334-77E501DB62E9),
 	  helpstring("Js2n Control"), control ]
 	coclass Js2n
 	{

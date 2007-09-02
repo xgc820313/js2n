@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=nprn
+PROJECTNAME=framework-npruntime
 
 # Active Configuration
 ACTIVECONF=Release
