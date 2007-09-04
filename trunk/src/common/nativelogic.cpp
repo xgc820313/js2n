@@ -118,7 +118,6 @@ void SendPluginEvent( const char* szEvent )
 {
 	PString strEvent = szEvent;
 
-
 	SendEventToJS( strEvent );
 }
 //////////////////////////////////////////////////////////////////////
