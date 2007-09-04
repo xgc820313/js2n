@@ -6,6 +6,7 @@
 // CJs2nCtrl : See Js2nCtrl.cpp for implementation.
 #include <ptlib.h>
 #include "..\common\nativelogic.h"
+#include "queue.h"
 
 class CJs2nCtrl : public COleControl
 {
@@ -57,8 +58,8 @@ public:
 
 private:
 	CString					m_strURL;
-	PString					m_strEvent;
 	tNativeLogic			m_NativeLogic;
+	Queue<PString>			m_stringQueue;
 	CRITICAL_SECTION		m_lock;
 private:
 	LRESULT OnNativeLogicEvent(WPARAM wParam, LPARAM lParam);
