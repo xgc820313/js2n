@@ -6,6 +6,7 @@
 #include "Js2nPropPage.h"
 #include "helpers.h"
 #include "registry.h"
+#include "queue.h"
 
 #include <comcat.h>
 #include <objsafe.h>
@@ -60,7 +61,6 @@ IMPLEMENT_OLECREATE_EX(CJs2nCtrl, "Js2n.Js2nCtrl.1",
 // Type library ID and version
 
 IMPLEMENT_OLETYPELIB(CJs2nCtrl, _tlid, _wVerMajor, _wVerMinor)
-
 
 
 // Interface IDs
@@ -155,7 +155,6 @@ CJs2nCtrl::CJs2nCtrl()
 	InitializeIIDs(&IID_DJs2n, &IID_DJs2nEvents);
 	// TODO: Initialize your control's instance data here.
 	g_pCJs2nCtrl = this;
-	::InitializeCriticalSection(&m_lock);
 }
 
 
@@ -164,13 +163,16 @@ CJs2nCtrl::CJs2nCtrl()
 CJs2nCtrl::~CJs2nCtrl()
 {
 	// TODO: Cleanup your control's instance data here.
-	::DeleteCriticalSection(&m_lock);
 }
 
 
 LRESULT CJs2nCtrl::OnNativeLogicEvent(WPARAM wParam, LPARAM lParam)
 {
-	FireOnEvent( m_strEvent );
+	if ( !m_stringQueue.IsEmpty() )
+	{
+		PString strEvent = m_stringQueue.RemoveHead();
+		FireOnEvent( strEvent );
+	}
 	return 0;
 }
 
@@ -265,10 +267,9 @@ bool SendEventToJS( const PString& strEvent )
 	{
 		return false;
 	}
-	EnterCriticalSection( &g_pCJs2nCtrl->m_lock );
-	g_pCJs2nCtrl->m_strEvent = strEvent; // replace this with queue;
-	PostMessage( g_pCJs2nCtrl->m_hWnd, WM_NLOGICEVENT, 0, 0 );
-	LeaveCriticalSection( &g_pCJs2nCtrl->m_lock );
+
+	g_pCJs2nCtrl->m_stringQueue.AddTail( strEvent ); // replace this with queue;
+	SendMessage( g_pCJs2nCtrl->m_hWnd, WM_NLOGICEVENT, 0, 0 );
 
 	//LPDISPATCH pDisp = g_pCjs2nCtrl->GetIDispatch( FALSE );
 	/*
